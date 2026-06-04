@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fitness Tracker Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- 2. FLOATING FITNESS ICONS -->
+<div class="floating-icons">
+    <span>🏃</span><span>💪</span><span>🔥</span><span>❤️</span><span>🚴</span>
+</div>
+
+<nav class="navbar">
+    <a href="/" class="nav-logo">⚡ FitTrack</a>
+    <div class="nav-links">
+        <a href="/" class="active">Dashboard</a>
+        <a href="/add">+ Add</a>
+        <a href="/history">History</a>
+        <a href="/goals">Goals</a>
+        <a href="/profile">Profile</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <h1 class="title">🏃 Fitness Tracker Dashboard</h1>
+    <p class="subtitle">Today: {{ today }}</p>
+
+    <!-- 3. NEON DASHBOARD CARDS -->
+    <h2 class="section-label">Today's Stats</h2>
+    <div class="stats-grid">
+        <div class="stat-card green">
+            <span class="stat-icon">👟</span>
+            <h3>Steps</h3>
+            <h1>{{ steps | int }}</h1>
+            <p>/ 10,000</p>
+            <div class="stat-progress">
+                <div class="stat-progress-bar" style="width:{{ [progress,100]|min }}%"></div>
+            </div>
+        </div>
+        <div class="stat-card orange">
+            <span class="stat-icon">🔥</span>
+            <h3>Calories</h3>
+            <h1>{{ calories | int }}</h1>
+            <p>/ 700 kcal</p>
+            <div class="stat-progress">
+                <div class="stat-progress-bar" style="width:{{ [cal_progress,100]|min }}%"></div>
+            </div>
+        </div>
+        <div class="stat-card blue">
+            <span class="stat-icon">🏋</span>
+            <h3>Workouts</h3>
+            <h1>{{ workouts }}</h1>
+            <p>/ 60 min</p>
+            <div class="stat-progress">
+                <div class="stat-progress-bar" style="width:{{ [workout_progress,100]|min }}%"></div>
+            </div>
+        </div>
+        <div class="stat-card pink">
+            <span class="stat-icon">💧</span>
+            <h3>Water Intake</h3>
+            <h1>2.5</h1>
+            <p>/ 4 L</p>
+            <div class="stat-progress">
+                <div class="stat-progress-bar" style="width:62%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. PULSE EFFECT ON CALORIES -->
+    <h2 class="section-label">🔥 Calorie Pulse</h2>
+    <div style="display:flex;justify-content:center;">
+        <div class="pulse-wrapper">
+            <div class="pulse-ring">
+                <span class="pulse-icon">🔥</span>
+                <div class="pulse-calories">{{ calories | int }}</div>
+                <div class="pulse-label">kcal</div>
+            </div>
+            <div class="heartbeat-line"></div>
+        </div>
+    </div>
+
+    <!-- 8. LIVE STEP COUNTER ANIMATION -->
+    <div class="live-steps-section">
+        <div class="live-steps-label">Today's Steps</div>
+        <div class="live-steps-number" id="liveSteps">0</div>
+        <div>👣 👣</div>
+        <div class="glow-platform"></div>
+    </div>
+
+    <!-- 6. ANIMATED PROGRESS BARS -->
+    <h2 class="section-label">Daily Progress</h2>
+    <div class="progress-section">
+        <div class="progress-label"><span>👟 Steps Goal</span><span>{{ progress }}%</span></div>
+        <div class="progress"><div class="progress-bar" style="width:0%" data-target="{{ [progress,100]|min }}">{{ progress }}%</div></div>
+
+        <div class="progress-label"><span>🔥 Calories Goal</span><span>{{ cal_progress }}%</span></div>
+        <div class="progress"><div class="progress-bar orange-bar" style="width:0%" data-target="{{ [cal_progress,100]|min }}">{{ cal_progress }}%</div></div>
+
+        <div class="progress-label"><span>🏋 Workout Goal</span><span>{{ workout_progress }}%</span></div>
+        <div class="progress"><div class="progress-bar pink-bar" style="width:0%" data-target="{{ [workout_progress,100]|min }}">{{ workout_progress }}%</div></div>
+    </div>
+    <div class="progress-summary">Great job! Keep it up 💪</div>
+
+    <!-- 4. CIRCULAR GOAL RINGS -->
+    <h2 class="section-label">Goal Rings</h2>
+    <div class="ring-container">
+        {% set rings = [
+            ('Steps', progress, '#00ff88', '#333'),
+            ('Calories', cal_progress, '#ff9800', '#333'),
+            ('Workout', workout_progress, '#00bfff', '#333'),
+            ('Overall', ([progress, cal_progress, workout_progress]|sum // 3), '#c084fc', '#333')
+        ] %}
+        {% for label, pct, color, bg in rings %}
+        {% set angle = (pct | float / 100 * 283) | int %}
+        <div class="ring">
+            <div class="ring-svg-wrap">
+                <svg width="120" height="120" viewBox="0 0 120 120">
+                    <circle cx="60" cy="60" r="45" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="10"/>
+                    <circle cx="60" cy="60" r="45" fill="none" stroke="{{ color }}" stroke-width="10"
+                        stroke-linecap="round"
+                        stroke-dasharray="{{ angle }} 283"
+                        style="filter:drop-shadow(0 0 6px {{ color }});transition:stroke-dasharray 1.5s ease;"/>
+                </svg>
+                <div class="ring-center">
+                    <span>{{ pct }}%</span>
+                    <small>{{ label }}</small>
+                </div>
+            </div>
+            <p>{{ label }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- 7. GLOWING BUTTONS -->
+    <div class="button-group">
+        <a href="/add" class="btn btn-primary">➕ Add Activity</a>
+        <a href="/history" class="btn btn-secondary">📊 View Dashboard</a>
+        <a href="/goals" class="btn btn-secondary">🎯 Goals</a>
+    </div>
+
+    <!-- 10. WEEKLY CHART & ACTIVITY BREAKDOWN -->
+    <div class="chart-card">
+        <h2>📈 Weekly Steps (Real Data)</h2>
+        <canvas id="stepsChart"></canvas>
+    </div>
+
+    <div class="chart-card">
+        <h2>🥧 Activity Breakdown</h2>
+        <canvas id="activityChart"></canvas>
+    </div>
+
+    <!-- 9. GLASSMORPHISM CARDS — Recent Activities -->
+    {% if activities %}
+    <h2 class="section-label">Recent Activities</h2>
+    <div class="recent-activities-glass">
+        {% for a in activities[:6] %}
+        <div class="glass-card">
+            <div class="glass-avatar">
+                {% if a['exercise_type'] == 'Running' %}🏃
+                {% elif a['exercise_type'] == 'Cycling' %}🚴
+                {% elif a['exercise_type'] == 'Gym' %}🏋
+                {% elif a['exercise_type'] == 'Yoga' %}🧘
+                {% else %}💪{% endif %}
+            </div>
+            <div class="glass-info">
+                <h4>{{ a['activity'] }}</h4>
+                <p>{{ a['exercise_type'] }}</p>
+                <div class="glass-meta">
+                    <span>⏱ {{ a['duration'] }} min</span>
+                    <span>🔥 {{ a['calories'] }} kcal</span>
+                </div>
+            </div>
+            <div class="glass-badge">📈</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</div>
+
+<script>
+const weeklySteps = {{ weekly_steps | tojson }};
+const weeklyLabels = {{ weekly_labels | tojson }};
+const typeLabels = {{ type_labels | tojson }};
+const typeCounts = {{ type_counts | tojson }};
+const totalSteps = {{ steps | int }};
+</script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

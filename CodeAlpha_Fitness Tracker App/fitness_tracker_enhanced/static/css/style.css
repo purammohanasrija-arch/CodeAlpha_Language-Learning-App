@@ -1,0 +1,331 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+/* ── 1. ANIMATED GRADIENT BACKGROUND ── */
+body{
+    min-height:100vh;overflow-x:hidden;color:white;
+    background:linear-gradient(-45deg,#0f172a,#111827,#1a0533,#0f766e,#1e293b,#0f172a);
+    background-size:600% 600%;
+    animation:bgMove 18s ease infinite;
+}
+@keyframes bgMove{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+/* Navbar */
+.navbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:15px 30px;
+    background:rgba(255,255,255,.05);
+    backdrop-filter:blur(15px);
+    border-bottom:1px solid rgba(255,255,255,.1);
+    position:sticky;top:0;z-index:100;
+}
+.nav-logo{
+    font-size:1.4rem;font-weight:700;
+    background:linear-gradient(90deg,#00ffff,#ff00ff);
+    -webkit-background-clip:text;color:transparent;text-decoration:none;
+}
+.nav-links{display:flex;gap:15px;}
+.nav-links a{
+    color:rgba(255,255,255,.7);text-decoration:none;
+    padding:7px 15px;border-radius:20px;font-size:.9rem;transition:.3s;
+}
+.nav-links a:hover,.nav-links a.active{
+    background:rgba(0,255,255,.15);color:#00ffff;
+}
+
+/* ── 2. FLOATING FITNESS ICONS ── */
+.floating-icons span{
+    position:fixed;font-size:42px;opacity:.07;pointer-events:none;
+    animation:floatUp 14s linear infinite;
+    filter:drop-shadow(0 0 8px currentColor);
+}
+.floating-icons span:nth-child(1){left:8%;animation-delay:0s;animation-duration:12s;}
+.floating-icons span:nth-child(2){left:25%;animation-delay:2.5s;animation-duration:16s;}
+.floating-icons span:nth-child(3){left:50%;animation-delay:5s;animation-duration:14s;}
+.floating-icons span:nth-child(4){left:72%;animation-delay:7s;animation-duration:18s;}
+.floating-icons span:nth-child(5){left:88%;animation-delay:9s;animation-duration:13s;}
+@keyframes floatUp{
+    0%{transform:translateY(105vh) scale(0.8);opacity:0;}
+    10%{opacity:.08;}
+    90%{opacity:.08;}
+    100%{transform:translateY(-120px) scale(1.2);opacity:0;}
+}
+
+/* Container */
+.container{width:90%;margin:auto;padding:30px;}
+
+/* Title */
+.title{
+    text-align:center;font-size:2.5rem;margin:20px 0 5px;
+    background:linear-gradient(90deg,#00ffff,#ff00ff);
+    -webkit-background-clip:text;color:transparent;
+}
+.subtitle{text-align:center;opacity:.6;margin-bottom:25px;}
+.section-label{margin:30px 0 15px;opacity:.8;font-size:1.1rem;}
+
+/* ── 3. NEON DASHBOARD CARDS ── */
+.stats-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;
+}
+.stat-card{
+    padding:25px;border-radius:25px;text-align:center;
+    background:rgba(255,255,255,.06);backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.12);
+    transition:transform .4s, box-shadow .4s;position:relative;overflow:hidden;
+}
+.stat-card::before{
+    content:'';position:absolute;inset:0;border-radius:25px;
+    background:linear-gradient(135deg,rgba(255,255,255,.08) 0%,transparent 60%);
+    pointer-events:none;
+}
+.stat-card:hover{transform:translateY(-12px);}
+.stat-card .stat-icon{font-size:2rem;margin-bottom:8px;display:block;}
+.stat-card h3{font-size:.8rem;text-transform:uppercase;letter-spacing:2px;opacity:.7;margin-bottom:4px;}
+.stat-card h1{font-size:2.4rem;font-weight:700;line-height:1;}
+.stat-card p{font-size:.8rem;opacity:.5;margin-top:4px;}
+
+/* Neon progress inside stat card */
+.stat-progress{height:4px;background:rgba(255,255,255,.12);border-radius:4px;margin-top:12px;overflow:hidden;}
+.stat-progress-bar{height:100%;border-radius:4px;transition:width 1.2s ease;}
+
+.green{border-color:rgba(0,255,0,.3);box-shadow:0 0 30px rgba(0,255,0,.25),inset 0 0 30px rgba(0,255,0,.05);}
+.green:hover{box-shadow:0 0 50px rgba(0,255,0,.5);}
+.green .stat-progress-bar{background:linear-gradient(90deg,#00ff88,#00ff44);}
+
+.orange{border-color:rgba(255,165,0,.3);box-shadow:0 0 30px rgba(255,100,0,.25),inset 0 0 30px rgba(255,100,0,.05);}
+.orange:hover{box-shadow:0 0 50px rgba(255,165,0,.5);}
+.orange .stat-progress-bar{background:linear-gradient(90deg,#ff9800,#ff5722);}
+
+.blue{border-color:rgba(0,255,255,.3);box-shadow:0 0 30px rgba(0,200,255,.25),inset 0 0 30px rgba(0,200,255,.05);}
+.blue:hover{box-shadow:0 0 50px rgba(0,255,255,.5);}
+.blue .stat-progress-bar{background:linear-gradient(90deg,#00bfff,#0080ff);}
+
+.pink{border-color:rgba(255,0,255,.3);box-shadow:0 0 30px rgba(200,0,255,.25),inset 0 0 30px rgba(200,0,255,.05);}
+.pink:hover{box-shadow:0 0 50px rgba(255,0,255,.5);}
+.pink .stat-progress-bar{background:linear-gradient(90deg,#e91e63,#9c27b0);}
+
+/* ── 5. PULSE EFFECT ON CALORIES ── */
+.pulse-wrapper{
+    display:flex;flex-direction:column;align-items:center;margin:35px auto;
+    position:relative;width:220px;
+}
+.pulse-ring{
+    width:180px;height:180px;border-radius:50%;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:rgba(255,80,0,.12);
+    border:3px solid rgba(255,80,0,.6);
+    position:relative;
+    animation:pulseGlow 2s ease-in-out infinite;
+    box-shadow:0 0 40px rgba(255,80,0,.4),0 0 80px rgba(255,80,0,.2);
+}
+.pulse-ring::before,.pulse-ring::after{
+    content:'';position:absolute;border-radius:50%;
+    border:2px solid rgba(255,80,0,.4);
+    animation:ripple 2s ease-in-out infinite;
+}
+.pulse-ring::before{width:210px;height:210px;animation-delay:.5s;}
+.pulse-ring::after{width:240px;height:240px;animation-delay:1s;}
+@keyframes ripple{
+    0%{transform:scale(.9);opacity:.8;}
+    100%{transform:scale(1.15);opacity:0;}
+}
+@keyframes pulseGlow{
+    0%,100%{box-shadow:0 0 40px rgba(255,80,0,.4),0 0 80px rgba(255,80,0,.2);}
+    50%{box-shadow:0 0 60px rgba(255,80,0,.7),0 0 120px rgba(255,80,0,.35);}
+}
+.pulse-icon{font-size:2rem;}
+.pulse-calories{font-size:3rem;font-weight:700;color:#ff6a00;line-height:1;}
+.pulse-label{font-size:.85rem;opacity:.7;}
+.heartbeat-line{
+    width:200px;height:50px;margin-top:12px;
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 50'%3E%3Cpolyline points='0,25 30,25 40,5 55,45 70,25 90,25 100,10 110,40 125,25 145,25 155,15 165,35 175,25 200,25' fill='none' stroke='%23ff4400' stroke-width='2.5'/%3E%3C/svg%3E") no-repeat center;
+    animation:scanLine 3s linear infinite;
+    background-size:200px 50px;
+}
+@keyframes scanLine{
+    0%{opacity:.4;filter:drop-shadow(0 0 2px #ff4400);}
+    50%{opacity:1;filter:drop-shadow(0 0 6px #ff4400);}
+    100%{opacity:.4;filter:drop-shadow(0 0 2px #ff4400);}
+}
+
+/* ── 6. ANIMATED PROGRESS BAR ── */
+.progress-section{margin-top:10px;}
+.progress-label{display:flex;justify-content:space-between;margin:15px 0 6px;opacity:.85;font-size:.9rem;}
+.progress{height:22px;background:rgba(255,255,255,.08);border-radius:30px;overflow:hidden;margin-bottom:8px;position:relative;}
+.progress-bar{
+    height:100%;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;
+    font-weight:bold;font-size:.75rem;border-radius:30px;
+    background:linear-gradient(90deg,#00ff88,#00bfff);
+    transition:width 1.4s cubic-bezier(.25,.8,.25,1);
+    box-shadow:0 0 12px rgba(0,255,136,.5);
+    position:relative;overflow:hidden;
+}
+.progress-bar::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(90deg,transparent 60%,rgba(255,255,255,.3) 80%,transparent 100%);
+    animation:shimmer 2s infinite;
+}
+@keyframes shimmer{0%{transform:translateX(-200%);}100%{transform:translateX(200%);}}
+.progress-bar.orange-bar{background:linear-gradient(90deg,#ff9800,#ff5722);box-shadow:0 0 12px rgba(255,100,0,.5);}
+.progress-bar.pink-bar{background:linear-gradient(90deg,#e91e63,#9c27b0);box-shadow:0 0 12px rgba(200,0,200,.5);}
+
+/* Daily progress summary */
+.progress-summary{
+    text-align:center;margin-top:10px;padding:10px 20px;
+    background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.25);
+    border-radius:12px;font-size:.9rem;color:#00ff88;
+}
+
+/* ── 4. CIRCULAR GOAL RINGS ── */
+.ring-container{display:flex;justify-content:center;gap:30px;flex-wrap:wrap;margin-top:30px;}
+.ring{text-align:center;}
+.ring-svg-wrap{position:relative;width:120px;height:120px;margin-bottom:8px;}
+.ring-svg-wrap svg{transform:rotate(-90deg);}
+.ring-center{
+    position:absolute;inset:0;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    font-size:1.2rem;font-weight:700;line-height:1;
+}
+.ring-center small{font-size:.6rem;opacity:.6;font-weight:400;}
+.ring p{font-size:.8rem;opacity:.7;margin-top:2px;}
+
+/* ── 8. LIVE STEP COUNTER ── */
+.live-steps-section{
+    text-align:center;margin:35px 0;
+    padding:30px;border-radius:25px;
+    background:rgba(255,255,255,.04);backdrop-filter:blur(15px);
+    border:1px solid rgba(0,255,136,.2);
+}
+.live-steps-label{
+    font-size:.8rem;letter-spacing:3px;text-transform:uppercase;
+    color:#00ff88;opacity:.8;margin-bottom:8px;
+}
+.live-steps-number{
+    font-size:5rem;font-weight:700;
+    color:#00ff88;
+    text-shadow:0 0 30px rgba(0,255,136,.6),0 0 60px rgba(0,255,136,.3);
+    animation:countBounce .4s ease;
+    line-height:1;
+}
+.step-feet{font-size:2rem;margin-top:5px;animation:stepBounce 1s ease infinite;}
+@keyframes stepBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+@keyframes countBounce{0%{transform:scale(.95);}50%{transform:scale(1.03);}100%{transform:scale(1);}}
+.glow-platform{
+    width:200px;height:20px;margin:15px auto 0;
+    background:radial-gradient(ellipse,rgba(0,255,136,.4) 0%,transparent 70%);
+    border-radius:50%;
+    animation:platformPulse 2s ease-in-out infinite;
+}
+@keyframes platformPulse{0%,100%{opacity:.4;transform:scaleX(.8);}50%{opacity:1;transform:scaleX(1.1);}}
+
+/* ── 7. GLOWING BUTTONS ── */
+.button-group{text-align:center;margin:30px 0;display:flex;flex-wrap:wrap;justify-content:center;gap:12px;}
+.btn{
+    padding:14px 28px;border:none;border-radius:30px;cursor:pointer;
+    font-size:15px;font-weight:600;color:rgb(28, 99, 185);
+    position:relative;overflow:hidden;transition:transform .25s, box-shadow .25s;
+    text-decoration:none;display:inline-flex;align-items:center;gap:6px;
+}
+.btn-primary{background:linear-gradient(90deg,#00c853,#00e676);}
+.btn-primary:hover{transform:scale(1.08);box-shadow:0 0 25px rgba(0,230,118,.7),0 0 50px rgba(0,230,118,.3);}
+.btn-secondary{background:transparent;border:2px solid rgba(0,255,255,.5);color:#00ffff;}
+.btn-secondary:hover{transform:scale(1.08);box-shadow:0 0 25px rgba(0,255,255,.5),0 0 50px rgba(0,255,255,.2);background:rgba(0,255,255,.1);}
+.btn-danger{background:linear-gradient(90deg,#ff4444,#ff8800);}
+.btn-danger:hover{transform:scale(1.08);box-shadow:0 0 25px rgba(255,68,68,.7);}
+.btn::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);
+    transform:translateX(-100%);transition:transform .5s;
+}
+.btn:hover::after{transform:translateX(100%);}
+
+/* ── 9. GLASSMORPHISM CARD ── */
+.glass-card{
+    display:flex;align-items:center;gap:15px;
+    padding:20px 24px;border-radius:20px;
+    background:rgba(255,255,255,.07);
+    backdrop-filter:blur(25px);-webkit-backdrop-filter:blur(25px);
+    border:1px solid rgba(255,255,255,.15);
+    box-shadow:0 8px 32px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.1);
+    transition:.3s;
+}
+.glass-card:hover{background:rgba(255,255,255,.1);transform:translateY(-3px);}
+.glass-avatar{
+    width:54px;height:54px;border-radius:50%;
+    background:rgba(0,255,136,.15);border:2px solid rgba(0,255,136,.3);
+    display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;
+}
+.glass-info{flex:1;}
+.glass-info h4{font-size:1rem;font-weight:600;margin-bottom:3px;}
+.glass-info p{font-size:.8rem;opacity:.6;}
+.glass-meta{display:flex;gap:15px;margin-top:6px;font-size:.78rem;opacity:.8;}
+.glass-badge{
+    background:rgba(0,255,136,.15);border:1px solid rgba(0,255,136,.3);
+    border-radius:50%;width:38px;height:38px;
+    display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;
+}
+.recent-activities-glass{display:flex;flex-direction:column;gap:12px;margin-top:10px;}
+
+/* Forms */
+.form-card{
+    max-width:600px;margin:auto;padding:30px;border-radius:25px;
+    background:rgba(255,255,255,.07);backdrop-filter:blur(20px);
+    box-shadow:0 0 25px rgba(0,255,255,.15);border:1px solid rgba(255,255,255,.12);
+}
+label{display:block;margin:15px 0 5px;opacity:.9;font-weight:500;}
+input,select{
+    width:100%;padding:14px;margin-bottom:5px;
+    border:1px solid rgba(255,255,255,.2);border-radius:12px;
+    background:rgba(255,255,255,.1);color:white;
+    font-size:15px;outline:none;transition:.3s;
+}
+input:focus,select:focus{border-color:#00ffff;box-shadow:0 0 10px rgba(0,255,255,.3);}
+select option{background:#1e293b;color:white;}
+
+/* History */
+.history-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;}
+.history-card{
+    padding:22px;border-radius:20px;
+    background:rgba(255,255,255,.07);backdrop-filter:blur(15px);
+    border:1px solid rgba(255,255,255,.1);
+    box-shadow:0 4px 20px rgba(0,0,0,.2);
+    transition:.3s;
+}
+.history-card:hover{transform:translateY(-4px);box-shadow:0 0 20px rgba(0,255,255,.2);}
+.history-header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px;}
+.badge{
+    background:rgba(0,255,255,.15);border:1px solid rgba(0,255,255,.3);
+    color:#00ffff;padding:3px 10px;border-radius:20px;
+    font-size:.75rem;white-space:nowrap;
+}
+
+/* Goal Grid */
+.goal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+
+/* ── 10. CHARTS ── */
+.chart-card{
+    margin-top:30px;padding:25px;border-radius:20px;
+    background:rgba(255,255,255,.06);backdrop-filter:blur(15px);
+    border:1px solid rgba(255,255,255,.1);
+}
+.chart-card h2{margin-bottom:15px;font-size:1.1rem;opacity:.9;}
+canvas{max-height:400px;}
+
+/* Empty state */
+.empty-state{text-align:center;padding:60px;opacity:.6;}
+.empty-state p{font-size:1.2rem;margin-bottom:20px;}
+
+/* Mobile */
+@media(max-width:768px){
+    .title{font-size:1.8rem;}
+    .container{width:95%;padding:15px;}
+    .navbar{flex-direction:column;gap:12px;}
+    .nav-links{flex-wrap:wrap;justify-content:center;}
+    .live-steps-number{font-size:3.5rem;}
+    .pulse-ring{width:150px;height:150px;}
+}
