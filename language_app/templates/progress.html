@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Progress — LinguaLearn</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<style>
+.stat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:16px; margin:24px 0; }
+.stat-box { background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12); border-radius:16px; padding:20px; text-align:center; }
+.stat-num { font-size:2.2rem; font-weight:800; background:linear-gradient(90deg,#ff00ff,#00ffff); -webkit-background-clip:text; color:transparent; }
+.stat-lbl { font-size:.85rem; color:rgba(255,255,255,.5); margin-top:4px; }
+.history-table { width:100%; border-collapse:collapse; font-size:.9rem; }
+.history-table th { background:rgba(255,255,255,.08); padding:10px 14px; text-align:left; }
+.history-table td { padding:10px 14px; border-bottom:1px solid rgba(255,255,255,.07); }
+.pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:.8rem; font-weight:600; }
+.pill-gold   { background:rgba(255,215,0,.2);  color:#ffd700; }
+.pill-silver { background:rgba(192,192,192,.2);color:#c0c0c0; }
+.pill-bronze { background:rgba(205,127,50,.2); color:#cd7f32; }
+.pill-try    { background:rgba(255,255,255,.1);color:white; }
+.categories-done { display:flex; gap:10px; flex-wrap:wrap; margin:16px 0; }
+.cat-badge { padding:6px 16px; border-radius:30px; font-size:.85rem; font-weight:600; }
+.cat-done    { background:rgba(0,255,100,.15); border:1px solid rgba(0,255,100,.3); color:#00ff64; }
+.cat-not     { background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); color:rgba(255,255,255,.4); }
+</style>
+</head>
+<body>
+<div class="stars"><span class="star"></span><span class="star"></span><span class="star"></span><span class="star"></span><span class="star"></span></div>
+
+<div class="container">
+  <a href="/" class="back-link">← Home</a>
+  <h1 class="title">📈 My Progress</h1>
+
+  <div class="card">
+    <h2 style="margin-bottom:16px;">Overall Stats</h2>
+    <div class="stat-grid">
+      <div class="stat-box"><div class="stat-num" id="statQuizzes">0</div><div class="stat-lbl">Quizzes Taken</div></div>
+      <div class="stat-box"><div class="stat-num" id="statBest">0%</div><div class="stat-lbl">Best Score</div></div>
+      <div class="stat-box"><div class="stat-num" id="statFlash">0</div><div class="stat-lbl">Flashcards Done</div></div>
+      <div class="stat-box"><div class="stat-num" id="statLessons">0</div><div class="stat-lbl">Categories Viewed</div></div>
+    </div>
+
+    <h3 style="margin-bottom:12px;">Categories Progress</h3>
+    <div class="categories-done" id="catBadges"></div>
+
+    <h3 style="margin:20px 0 12px;">Lessons Completed</h3>
+    <div class="progress"><div class="progress-bar" id="progressBar">0%</div></div>
+
+    <h3 style="margin:24px 0 12px;">Quiz History</h3>
+    <div id="historyWrap">
+      <p style="color:rgba(255,255,255,.4);font-size:.9rem;">No quizzes taken yet. <a href="/quiz?category=all" style="color:#00ffff;">Take your first quiz!</a></p>
+    </div>
+
+    <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+      <a href="/lessons?category=vocabulary"><button class="btn">📖 Start Lesson</button></a>
+      <a href="/quiz?category=all"><button class="btn">🧠 Take Quiz</button></a>
+      <button class="btn" onclick="clearProgress()" style="background:rgba(255,80,80,.3);border:1px solid rgba(255,80,80,.5);">🗑 Reset Progress</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const allCategories = ['vocabulary', 'grammar', 'phrases', 'sentences'];
+
+function loadProgress() {
+  const quizHistory = JSON.parse(localStorage.getItem('quizHistory') || '[]');
+  const bestScore   = parseInt(localStorage.getItem('bestScore') || '0');
+  const quizzesTaken = parseInt(localStorage.getItem('quizzesTaken') || '0');
+  const flashcardsDone = parseInt(localStorage.getItem('flashcardsDone') || '0');
+  const lessonsViewed  = JSON.parse(localStorage.getItem('lessonsViewed') || '[]');
+
+  document.getElementById('statQuizzes').textContent = quizzesTaken;
+  document.getElementById('statBest').textContent    = bestScore + '%';
+  document.getElementById('statFlash').textContent   = flashcardsDone;
+  document.getElementById('statLessons').textContent = lessonsViewed.length;
+
+  // Category badges
+  const cb = document.getElementById('catBadges');
+  cb.innerHTML = allCategories.map(c =>
+    `<span class="cat-badge ${lessonsViewed.includes(c) ? 'cat-done' : 'cat-not'}">
+      ${lessonsViewed.includes(c) ? '✅' : '○'} ${c.charAt(0).toUpperCase()+c.slice(1)}
+    </span>`
+  ).join('');
+
+  // Progress bar
+  const pct = Math.round((lessonsViewed.length / allCategories.length) * 100);
+  const bar = document.getElementById('progressBar');
+  bar.style.width = pct + '%';
+  bar.textContent = pct + '%';
+
+  // Quiz history table
+  if (quizHistory.length > 0) {
+    const rows = [...quizHistory].reverse().slice(0, 10).map(h => {
+      let pillClass = h.pct >= 90 ? 'pill-gold' : h.pct >= 70 ? 'pill-silver' : h.pct >= 50 ? 'pill-bronze' : 'pill-try';
+      return `<tr>
+        <td>${h.date}</td>
+        <td>${h.score}/${h.total}</td>
+        <td><span class="pill ${pillClass}">${h.pct}%</span></td>
+      </tr>`;
+    }).join('');
+    document.getElementById('historyWrap').innerHTML = `
+      <table class="history-table">
+        <tr><th>Date</th><th>Score</th><th>Grade</th></tr>
+        ${rows}
+      </table>`;
+  }
+}
+
+function clearProgress() {
+  if (confirm('Reset all your progress? This cannot be undone.')) {
+    ['quizHistory','bestScore','quizzesTaken','flashcardsDone','lessonsViewed'].forEach(k => localStorage.removeItem(k));
+    loadProgress();
+  }
+}
+
+loadProgress();
+</script>
+</body>
+</html>

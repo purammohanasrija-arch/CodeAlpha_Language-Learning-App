@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lessons — LinguaLearn</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+</head>
+<body>
+<div class="stars"><span class="star"></span><span class="star"></span><span class="star"></span><span class="star"></span><span class="star"></span></div>
+
+<div class="container">
+  <a href="/" class="back-link">← Home</a>
+  <h1 class="title">📚 Daily Lessons</h1>
+
+  <div class="tab-row">
+    {% for cat in categories %}
+    <a href="/lessons?category={{ cat }}" class="tab {% if cat == category %}active{% endif %}">
+      {{ cat.capitalize() }}
+    </a>
+    {% endfor %}
+    <a href="/flashcards?category={{ category }}" class="tab tab-alt">🃏 Flashcards</a>
+  </div>
+
+  <div class="card">
+    <table>
+      <tr>
+        <th>🇬🇧 English Word / Phrase</th>
+        <th>📖 Meaning</th>
+        <th>🔤 Pronunciation</th>
+        <th>💡 Example</th>
+        <th>🔊 Listen</th>
+      </tr>
+      {% for lesson in lessons %}
+      <tr>
+        <td><strong>{{ lesson.word }}</strong></td>
+        <td>{{ lesson.meaning }}</td>
+        <td><em class="pronun">{{ lesson.pronunciation }}</em></td>
+        <td class="example-cell">{{ lesson.example }}</td>
+        <td>
+          <button class="btn btn-sm" onclick="speakWord('{{ lesson.word }}', 'en-US')">🔊 Speak</button>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+
+    <div class="action-row">
+      <a href="/flashcards?category={{ category }}"><button class="btn">🃏 Flashcards</button></a>
+      <a href="/quiz?category={{ category }}"><button class="btn">📝 Take Quiz</button></a>
+      <a href="/progress"><button class="btn">📈 My Progress</button></a>
+    </div>
+  </div>
+</div>
+
+<script>
+  let viewed = JSON.parse(localStorage.getItem('lessonsViewed') || '[]');
+  if (!viewed.includes('{{ category }}')) {
+    viewed.push('{{ category }}');
+    localStorage.setItem('lessonsViewed', JSON.stringify(viewed));
+  }
+</script>
+</body>
+</html>

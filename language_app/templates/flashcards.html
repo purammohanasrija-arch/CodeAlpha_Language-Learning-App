@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcards — LinguaLearn</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+<style>
+.flashcard-wrap { perspective: 1000px; margin: 24px auto; max-width: 500px; }
+.flashcard {
+  width: 100%; height: 280px; position: relative;
+  transform-style: preserve-3d; transition: transform .6s; cursor: pointer;
+}
+.flashcard.flipped { transform: rotateY(180deg); }
+.fc-front, .fc-back {
+  position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+  border-radius: 20px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 28px;
+  border: 1px solid rgba(255,255,255,.15); text-align: center;
+}
+.fc-front { background: rgba(0,255,255,.07); }
+.fc-back  { background: rgba(255,0,255,.07); transform: rotateY(180deg); }
+.fc-word  { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+.fc-hint  { color: rgba(255,255,255,.45); font-size: .85rem; }
+.fc-meaning    { font-size: 1.1rem; color: #00ffff; font-weight: 600; margin-bottom: 8px; }
+.fc-pronun     { font-size: 1rem; color: rgba(255,255,255,.65); font-style: italic; margin-bottom: 8px; }
+.fc-example    { font-size: .85rem; color: rgba(255,255,255,.5); font-style: italic; }
+.fc-counter    { text-align: center; color: rgba(255,255,255,.5); margin-top: 8px; font-size: .85rem; }
+.fc-controls   { display: flex; gap: 12px; justify-content: center; margin-top: 18px; flex-wrap: wrap; }
+.progress-dots { display: flex; gap: 7px; justify-content: center; margin: 16px 0; flex-wrap: wrap; }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.18); transition: .3s; }
+.dot.seen    { background: #00ffff; }
+.dot.current { background: #ff00ff; transform: scale(1.4); }
+</style>
+</head>
+<body>
+<div class="stars"><span class="star"></span><span class="star"></span><span class="star"></span><span class="star"></span><span class="star"></span></div>
+
+<div class="container">
+  <a href="/lessons?category={{ category }}" class="back-link">← Back to Lessons</a>
+  <h1 class="title">🃏 Flashcards</h1>
+
+  <div class="tab-row">
+    {% for cat in categories %}
+    <a href="/flashcards?category={{ cat }}" class="tab {% if cat == category %}active{% endif %}">{{ cat.capitalize() }}</a>
+    {% endfor %}
+  </div>
+
+  <div class="card" style="max-width:580px;margin:0 auto;">
+    <div class="progress-dots" id="dots"></div>
+
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="fc-front">
+          <div class="fc-word" id="fc-word">—</div>
+          <div class="fc-hint">Click to see meaning &amp; pronunciation</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-meaning"  id="fc-meaning">—</div>
+          <div class="fc-pronun"   id="fc-pronun">—</div>
+          <div class="fc-example"  id="fc-example">—</div>
+          <button class="btn btn-sm" style="margin-top:14px;"
+            onclick="event.stopPropagation(); speakCurrent()">🔊 Pronounce</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="fc-counter" id="counter">Card 1 of 1</div>
+
+    <div class="fc-controls">
+      <button class="btn" onclick="prevCard()">⬅ Prev</button>
+      <button class="btn" onclick="nextCard()">Next ➡</button>
+    </div>
+
+    <div style="text-align:center;margin-top:20px;">
+      <a href="/quiz?category={{ category }}"><button class="btn">📝 Take Quiz</button></a>
+    </div>
+  </div>
+</div>
+
+<script>
+const lessons = {{ lessons | tojson }};
+let current = 0;
+let seen = new Set();
+
+function buildDots() {
+  const d = document.getElementById('dots');
+  d.innerHTML = '';
+  lessons.forEach((_, i) => {
+    const dot = document.createElement('span');
+    dot.className = 'dot' + (seen.has(i) ? ' seen' : '') + (i === current ? ' current' : '');
+    d.appendChild(dot);
+  });
+}
+
+function showCard(idx) {
+  document.getElementById('flashcard').classList.remove('flipped');
+  const l = lessons[idx];
+  document.getElementById('fc-word').textContent    = l.word;
+  document.getElementById('fc-meaning').textContent = l.meaning;
+  document.getElementById('fc-pronun').textContent  = '/' + l.pronunciation + '/';
+  document.getElementById('fc-example').textContent = '"' + l.example + '"';
+  document.getElementById('counter').textContent    = `Card ${idx+1} of ${lessons.length}`;
+  seen.add(idx);
+  buildDots();
+  let done = parseInt(localStorage.getItem('flashcardsDone') || '0');
+  if (seen.size > done) localStorage.setItem('flashcardsDone', seen.size);
+}
+
+function flipCard()    { document.getElementById('flashcard').classList.toggle('flipped'); }
+function speakCurrent(){ speakWord(lessons[current].word, 'en-US'); }
+function nextCard()    { current = (current + 1) % lessons.length; showCard(current); }
+function prevCard()    { current = (current - 1 + lessons.length) % lessons.length; showCard(current); }
+
+showCard(0);
+</script>
+</body>
+</html>

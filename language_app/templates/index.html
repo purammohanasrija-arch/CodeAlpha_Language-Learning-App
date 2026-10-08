@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinguaLearn — Learn English</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="stars"><span class="star"></span><span class="star"></span><span class="star"></span><span class="star"></span><span class="star"></span></div>
+<div class="star-shape" style="top:5%;left:5%;"></div>
+<div class="star-shape" style="top:10%;left:25%;"></div>
+<div class="star-shape" style="top:15%;left:45%;"></div>
+<div class="star-shape" style="top:8%;left:65%;"></div>
+<div class="star-shape" style="top:12%;left:85%;"></div>
+<div class="star-shape" style="top:35%;left:15%;"></div>
+<div class="star-shape" style="top:55%;left:35%;"></div>
+<div class="star-shape" style="top:75%;left:55%;"></div>
+<div class="star-shape" style="top:65%;left:75%;"></div>
+<div class="star-shape" style="top:85%;left:90%;"></div>
+
+<div class="container">
+  <h1 class="title">🇬🇧 LinguaLearn</h1>
+  <p class="subtitle">Learn English — words, grammar, phrases &amp; sentences</p>
+
+  <div class="nav-grid">
+    <div class="nav-card" onclick="location.href='/lessons?category=vocabulary'">
+      <div class="nav-icon">📖</div>
+      <h3>Vocabulary</h3>
+      <p>Learn essential English words with meanings &amp; pronunciation</p>
+      <span class="nav-tag">10 words</span>
+    </div>
+    <div class="nav-card" onclick="location.href='/lessons?category=grammar'">
+      <div class="nav-icon">✏️</div>
+      <h3>Grammar</h3>
+      <p>Master tenses, sentence structures and usage</p>
+      <span class="nav-tag">8 lessons</span>
+    </div>
+    <div class="nav-card" onclick="location.href='/lessons?category=phrases'">
+      <div class="nav-icon">💬</div>
+      <h3>Phrases</h3>
+      <p>Common English phrases for everyday conversations</p>
+      <span class="nav-tag">8 phrases</span>
+    </div>
+    <div class="nav-card" onclick="location.href='/lessons?category=sentences'">
+      <div class="nav-icon">📝</div>
+      <h3>Sentences</h3>
+      <p>Full English sentences with context and usage examples</p>
+      <span class="nav-tag">6 sentences</span>
+    </div>
+    <div class="nav-card" onclick="location.href='/flashcards?category=vocabulary'">
+      <div class="nav-icon">🃏</div>
+      <h3>Flashcards</h3>
+      <p>Flip-card practice with English audio pronunciation</p>
+      <span class="nav-tag">Daily practice</span>
+    </div>
+    <div class="nav-card" onclick="location.href='/quiz?category=all'">
+      <div class="nav-icon">🧠</div>
+      <h3>Quiz</h3>
+      <p>Test your English knowledge with scored questions</p>
+      <span class="nav-tag">14 questions</span>
+    </div>
+    <div class="nav-card" onclick="location.href='/progress'">
+      <div class="nav-icon">📈</div>
+      <h3>Progress</h3>
+      <p>Track your learning journey and scores over time</p>
+      <span class="nav-tag">Your stats</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>
